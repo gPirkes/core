@@ -1,0 +1,15 @@
+{
+  "domain": "opentelemetry",
+  "name": "OpenTelemetry Exporter",
+  "codeowners": ["@pirgeo"],
+  "dependencies": ["http"],
+  "documentation": "https://www.home-assistant.io/integrations/opentelemetry",
+  "homekit": {},
+  "integration_type": "helper",
+  "iot_class": "assumed_state",
+  "requirements": [
+    "opentelemetry-api==1.27.0",
+    "opentelemetry-sdk==1.27.0",
+    "opentelemetry-exporter-otlp==1.27.0"
+  ]
+}

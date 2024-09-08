@@ -7339,6 +7339,12 @@
       "config_flow": true,
       "iot_class": "calculated"
     },
+    "opentelemetry": {
+      "name": "OpenTelemetry Exporter",
+      "integration_type": "helper",
+      "config_flow": false,
+      "iot_class": "assumed_state"
+    },
     "random": {
       "name": "Random",
       "integration_type": "helper",

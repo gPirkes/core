@@ -1063,6 +1063,8 @@ build.json @home-assistant/supervisor
 /tests/components/openhome/ @bazwilliams
 /homeassistant/components/opensky/ @joostlek
 /tests/components/opensky/ @joostlek
+/homeassistant/components/opentelemetry/ @pirgeo
+/tests/components/opentelemetry/ @pirgeo
 /homeassistant/components/opentherm_gw/ @mvn23
 /tests/components/opentherm_gw/ @mvn23
 /homeassistant/components/openuv/ @bachya
