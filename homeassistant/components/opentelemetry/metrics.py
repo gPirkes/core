@@ -2,96 +2,25 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
-from contextlib import suppress
 import logging
-import string
-from typing import Any, cast
+from typing import Any
 
-from aiohttp import web
-from opentelemetry import metrics
-from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import (
-    OTLPMetricExporter,
-)
-from opentelemetry.metrics import (
-    CallbackOptions,
-    Observation,
-    get_meter_provider,
-    set_meter_provider,
-)
+from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+from opentelemetry.metrics import get_meter_provider, set_meter_provider
 from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.metrics import Meter
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
 # import prometheus_client
 # from prometheus_client.metrics import MetricWrapperBase
-import voluptuous as vol
-
-from homeassistant import core as hacore
-from homeassistant.components.climate import (
-    ATTR_CURRENT_TEMPERATURE,
-    ATTR_FAN_MODE,
-    ATTR_FAN_MODES,
-    ATTR_HVAC_ACTION,
-    ATTR_HVAC_MODES,
-    ATTR_TARGET_TEMP_HIGH,
-    ATTR_TARGET_TEMP_LOW,
-    HVACAction,
-)
-from homeassistant.components.cover import (
-    ATTR_CURRENT_POSITION,
-    ATTR_CURRENT_TILT_POSITION,
-)
-from homeassistant.components.fan import (
-    ATTR_DIRECTION,
-    ATTR_OSCILLATING,
-    ATTR_PERCENTAGE,
-    ATTR_PRESET_MODE,
-    ATTR_PRESET_MODES,
-    DIRECTION_FORWARD,
-    DIRECTION_REVERSE,
-)
-from homeassistant.components.http import KEY_HASS, HomeAssistantView
-from homeassistant.components.humidifier import ATTR_AVAILABLE_MODES, ATTR_HUMIDITY
-from homeassistant.components.light import ATTR_BRIGHTNESS
-from homeassistant.components.sensor import SensorDeviceClass
-from homeassistant.const import (
-    ATTR_BATTERY_LEVEL,
-    ATTR_DEVICE_CLASS,
-    ATTR_FRIENDLY_NAME,
-    ATTR_MODE,
-    ATTR_TEMPERATURE,
-    ATTR_UNIT_OF_MEASUREMENT,
-    CONTENT_TYPE_TEXT_PLAIN,
-    EVENT_STATE_CHANGED,
-    PERCENTAGE,
-    STATE_CLOSED,
-    STATE_CLOSING,
-    STATE_ON,
-    STATE_OPEN,
-    STATE_OPENING,
-    STATE_UNAVAILABLE,
-    STATE_UNKNOWN,
-    UnitOfTemperature,
-)
-from homeassistant.core import Event, EventStateChangedData, HomeAssistant, State
-from homeassistant.helpers import entityfilter, state as state_helper
-import homeassistant.helpers.config_validation as cv
-from homeassistant.helpers.entity_registry import (
-    EVENT_ENTITY_REGISTRY_UPDATED,
-    EventEntityRegistryUpdatedData,
-)
-from homeassistant.helpers.entity_values import EntityValues
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.typing import ConfigType
-from homeassistant.util.dt import as_timestamp
-from homeassistant.util.unit_conversion import TemperatureConverter
 
 _LOGGER = logging.getLogger(__name__)
 
 
-CONF_ENDPOINT="endpoint"
-CONF_OTLP_HEADERS="headers"
-CONF_OTLP_SCOPE_NAME="scope_name"
+CONF_ENDPOINT = "endpoint"
+CONF_OTLP_HEADERS = "headers"
+CONF_OTLP_SCOPE_NAME = "scope_name"
 # CONF_PREFIX="prefix"
 
 # CONF_FILTER = "filter"
@@ -106,10 +35,8 @@ CONF_OTLP_SCOPE_NAME="scope_name"
 #     {vol.Optional(CONF_OVERRIDE_METRIC): cv.string}
 # )
 
-DEFAULT_ENDPOINT="localhost:4318"
+DEFAULT_ENDPOINT = "localhost:4318"
 DEFAULT_NAMESPACE = "homeassistant"
-
-
 
 
 def setup(hass: HomeAssistant, config: ConfigType) -> bool:
@@ -124,14 +51,9 @@ def setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
     meter = get_meter_provider().get_meter(conf[CONF_OTLP_SCOPE_NAME], "0.1.2")
 
-
     climate_units = hass.config.units.temperature_unit
 
-
-    metrics = OpentelemetryMetrics(
-        provider,
-        climate_units
-    )
+    metrics = OpentelemetryMetrics(provider, climate_units)
 
     # TODO is this needed?
     # hass.bus.listen(EVENT_ENTITY_REGISTRY_UPDATED, )
@@ -144,8 +66,6 @@ def setup(hass: HomeAssistant, config: ConfigType) -> bool:
     # for state in hass.states.all():
     #     if entity_filter(state.entity_id):
     #         metrics.handle_state(state)
-
-
 
     return True
 
@@ -799,4 +719,3 @@ def setup(hass: HomeAssistant, config: ConfigType) -> bool:
 #         )
 #         value = self.state_as_number(state)
 #         metric.labels(**self._labels(state)).set(value)
-

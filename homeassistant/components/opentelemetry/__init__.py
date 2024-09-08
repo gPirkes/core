@@ -18,10 +18,7 @@ from opentelemetry_metrics import OpenTelemetryMetrics
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import (
-    EVENT_STATE_CHANGED,
-    Platform,
-    )
+from homeassistant.const import EVENT_STATE_CHANGED, Platform
 from homeassistant.core import HomeAssistant
 import homeassistant.helpers.config_validation as cv
 from homeassistant.helpers.entity_registry import EVENT_ENTITY_REGISTRY_UPDATED
@@ -42,7 +39,9 @@ CONFIG_SCHEMA = vol.Schema(
             {
                 # TODO: hass cv validation does not allow the url type to not have the protocol specified. (used for gRPC export without protocol)
                 vol.Optional(CONF_ENDPOINT, default=DEFAULT_ENDPOINT): cv.string,
-                vol.Optional(CONF_OTLP_SCOPE_NAME, default=DEFAULT_NAMESPACE): cv.string,
+                vol.Optional(
+                    CONF_OTLP_SCOPE_NAME, default=DEFAULT_NAMESPACE
+                ): cv.string,
                 # TODO maybe add full SDK config at some point
                 # TODO export interval
                 # TODO temporality preference
